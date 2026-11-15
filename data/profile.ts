@@ -5,7 +5,7 @@ export const profileData = {
   badge: "Junior DevOps Engineer | Web Developer",
   heroHeading: "Building Reliable Infrastructure & Modern Web Applications.",
   heroDescription:
-    "Saya Muhammad Syafiq Ramadani, seorang Software Engineering graduate yang memiliki ketertarikan pada pengembangan website, otomatisasi infrastruktur, containerization, dan cloud-native technologies.",
+    "Saya Muhammad Syafiq Ramadani, seorang DevOps engineering yang memiliki ketertarikan pada pengembangan website, otomatisasi infrastruktur, containerization, dan cloud-native technologies.",
   location: "Based in Indonesia",
   roles: ["Junior DevOps Engineer", "Web Developer"],
   avatar: "/images/profile.jpg",

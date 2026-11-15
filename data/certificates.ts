@@ -16,12 +16,5 @@ export const certificatesData: CertificateItem[] = [
     image: "/images/certificates/revou-certificate.jpg",
     category: "Digital Marketing",
   },
-  {
-    id: "cert-imde",
-    title: "Digital Marketing Certificate – IMDE (Institut Media Digital Emtek)",
-    issuer: "IMDE (Institut Media Digital Emtek)",
-    year: "Verified Credential",
-    image: "/images/certificates/imde-certificate.jpg",
-    category: "Digital Marketing",
-  },
+
 ];

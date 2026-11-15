@@ -139,7 +139,7 @@ export default function Hero() {
               <div className="absolute -bottom-2 right-2 sm:bottom-2 sm:right-2 px-3.5 py-2 rounded-xl bg-navy-900/95 border border-slate-700/80 shadow-soft flex items-center gap-2 backdrop-blur-md">
                 <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0" />
                 <span className="text-xs font-semibold text-slate-200">
-                  DevOps & Web Ready
+                  DevOps
                 </span>
               </div>
             </div>
