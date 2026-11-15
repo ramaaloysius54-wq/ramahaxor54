@@ -1,0 +1,316 @@
+export interface ProjectItem {
+  id: string;
+  number: string;
+  codeName: string;
+  title: string;
+  category: "Web Development" | "DevOps & Infrastructure";
+  description: string;
+  image: string;
+  liveUrl?: string;
+  technologies: string[];
+  screenshotsIncluded: string[];
+}
+
+export const projectsData: ProjectItem[] = [
+  {
+    id: "proj-01",
+    number: "01",
+    codeName: "SMK BHAKTI KENCANA TASIKMALAYA",
+    title: "SMK BHAKTI KENCANA TASIKMALAYA",
+    category: "Web Development",
+    description:
+      "Pengembangan website sekolah untuk menyediakan informasi dan konten digital yang dapat diakses oleh pengunjung.",
+    image: "/images/projects/smkbktasik.jpg",
+    liveUrl: "https://smkbktasik.sch.id",
+    technologies: [ "wordpress", "elementor", "photo slider" ],
+    screenshotsIncluded: [
+      "Halaman Utama Website Sekolah",
+      "Navigasi & Struktur Informasi Akademik",
+      "Desain Responsif Desktop & Mobile",
+    ],
+  },
+  {
+    id: "proj-02",
+    number: "02",
+    codeName: "TABUNGAN RAMA",
+    title: "Tabungan Rama – Web Application",
+    category: "Web Development",
+    description:
+      "Proyek pengembangan aplikasi berbasis web yang menjadi bagian dari pengalaman saya dalam membangun dan mengelola aplikasi web.",
+    image: "/images/projects/tabunganrama.jpg",
+    liveUrl: "https://tabunganrama.my.id",
+    technologies: ["Web Application", "Frontend UI", "Web Deployment"],
+    screenshotsIncluded: [
+      "Dashboard Aplikasi Tabungan Rama",
+      "Antarmuka Manajemen Data",
+      "Tampilan Responsif Web App",
+    ],
+  },
+  {
+    id: "proj-03",
+    number: "03",
+    codeName: "RAMA HAXOR",
+    title: "Rama Haxor – Web Development Project",
+    category: "Web Development",
+    description:
+      "Proyek website yang menunjukkan eksplorasi dan pengembangan kemampuan dalam bidang web development dan teknologi.",
+    image: "/images/projects/ramahaxor.jpg",
+    liveUrl: "https://ramahaxor.my.id",
+    technologies: ["Web Development", "Modern UI", "Custom Hosting & DNS"],
+    screenshotsIncluded: [
+      "Landing Page Rama Haxor",
+      "Eksplorasi Antarmuka Web Modern",
+      "Implementasi Struktur Halaman",
+    ],
+  },
+  {
+    id: "proj-04",
+    number: "04",
+    codeName: "END-TO-END AUTOMATED CI/CD PIPELINE",
+    title: "End-to-End Automated CI/CD Pipeline",
+    category: "DevOps & Infrastructure",
+    description: `Mengimplementasikan pipeline CI/CD menggunakan GitHub Actions untuk mengotomatisasi proses pengujian dan deployment aplikasi ke VPS secara berkelanjutan pada setiap push ke branch main.
+
+Berikut ini adalah konfigurasi workflows nya (name: CI/CD Pipeline Rama DevOps):
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    name: rama DevOps
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 🧪 Clean Install & Build (Di GitHub)
+        run: |
+          npm ci
+          npx prisma generate
+          npm run build --if-present
+          npm run bot:build --if-present
+
+      - name: 🚀 Sync & Restart di VPS (/var/www/rama_bot)
+        env:
+          VPS_HOST: \${{ secrets.VPS_HOST }}
+          VPS_USER: \${{ secrets.VPS_USER }}
+          SSHPASS: \${{ secrets.VPS_PASSWORD }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y sshpass rsync
+          
+          echo "1. Mengirim file terbaru ke VPS..."
+          sshpass -e rsync -avz \\
+            --exclude='.git' \\
+            --exclude='node_modules' \\
+            --exclude='.env' \\
+            --exclude='baileys_auth_info' \\
+            -e "ssh -o StrictHostKeyChecking=no -o PubkeyAuthentication=no -p 22" \\
+            ./ "$VPS_USER@$VPS_HOST:/var/www/rama_bot/"
+          
+          echo "2. Install module & Restart PM2 di VPS..."
+          sshpass -e ssh -o StrictHostKeyChecking=no -o PubkeyAuthentication=no -p 22 "$VPS_USER@$VPS_HOST" << 'ENDSSH'
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+            export PATH=$PATH:/usr/local/bin:/usr/bin:~/.npm-global/bin
+            cd /var/www/rama_bot
+            
+            npm ci
+            npx prisma generate
+            npm run bot:build --if-present
+            
+            pm2 stop all || true
+            pm2 save || true
+          ENDSSH
+
+      - name: ☸️ Deploy & Rollout Kubernetes (K3s) di VPS
+        env:
+          VPS_HOST: \${{ secrets.VPS_HOST }}
+          VPS_USER: \${{ secrets.VPS_USER }}
+          SSHPASS: \${{ secrets.VPS_PASSWORD }}
+        run: |
+          echo "3. Menjalankan Orkestrasi Pods Kubernetes (K3s)..."
+          sshpass -e ssh -o StrictHostKeyChecking=no -o PubkeyAuthentication=no -p 22 "$VPS_USER@$VPS_HOST" << 'ENDK8S'
+            export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+            mkdir -p /var/www/k8s-rama
+            cd /var/www/k8s-rama
+
+            # Hapus deployment bot-engine lama yang terpisah agar tidak bentrok sesi WA
+            kubectl delete deployment bot-engine --ignore-not-found=true
+
+            cat << 'EOF2' > deployment.yaml
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: web-dashboard
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: web-dashboard
+            template:
+              metadata:
+                labels:
+                  app: web-dashboard
+              spec:
+                enableServiceLinks: false
+                containers:
+                - name: web
+                  image: node:20
+                  workingDir: /app
+                  command: ["sh", "-c", "npm run start"]
+                  ports:
+                  - containerPort: 3000
+                  env:
+                  - name: HOSTNAME
+                    value: "0.0.0.0"
+                  - name: HOST
+                    value: "0.0.0.0"
+                  - name: PORT
+                    value: "3000"
+                  - name: BOT_SERVICE_PORT
+                    value: "4000"
+                  - name: BOT_PORT
+                    value: "4000"
+                  volumeMounts:
+                  - name: app-volume
+                    mountPath: /app
+                - name: engine
+                  image: node:20
+                  workingDir: /app
+                  command: ["sh", "-c", "npm run bot:build && (node dist-bot/server.js || node dist-bot/bot-service/server.js)"]
+                  ports:
+                  - containerPort: 4000
+                  env:
+                  - name: PORT
+                    value: "4000"
+                  - name: BOT_SERVICE_PORT
+                    value: "4000"
+                  volumeMounts:
+                  - name: app-volume
+                    mountPath: /app
+                volumes:
+                - name: app-volume
+                  hostPath:
+                    path: /var/www/rama_bot
+          EOF2
+
+            cat << 'EOF2' > service.yaml
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: web-service
+          spec:
+            type: NodePort
+            selector:
+              app: web-dashboard
+            ports:
+              - protocol: TCP
+                port: 80
+                targetPort: 3000
+                nodePort: 30080
+          ---
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: bot-service
+          spec:
+            selector:
+              app: web-dashboard
+            ports:
+              - protocol: TCP
+                port: 4000
+                targetPort: 4000
+          EOF2
+
+            cat << 'EOF2' > ingress.yaml
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: rama-ingress
+            annotations:
+              ingress.kubernetes.io/ssl-redirect: "false"
+          spec:
+            rules:
+            - host: tabunganrama.my.id
+              http:
+                paths:
+                - path: /api/bot
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: bot-service
+                      port:
+                        number: 4000
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: web-service
+                      port:
+                        number: 80
+          EOF2
+
+            kubectl apply -f deployment.yaml || (kubectl delete -f deployment.yaml && kubectl apply -f deployment.yaml)
+            kubectl apply -f service.yaml
+            kubectl apply -f ingress.yaml
+            kubectl rollout restart deployment/web-dashboard
+            sleep 8
+            kubectl get pods -l app=web-dashboard -o wide
+            kubectl get svc web-service bot-service
+            kubectl get ingress rama-ingress
+          ENDK8S`,
+    image: "/images/projects/cicd-pipeline.jpg",
+    technologies: ["GitHub Actions", "Jenkins", "Linux VPS", "SSH", "Docker"],
+    screenshotsIncluded: [
+      "GitHub Actions Workflow",
+      "Pipeline Execution",
+      "Terminal Deployment",
+      "Server Production",
+    ],
+  },
+  {
+    id: "proj-05",
+    number: "05",
+    codeName: "KUBERNETES MULTI-SERVICE ORCHESTRATION",
+    title: "Kubernetes Multi-Service Orchestration",
+    category: "DevOps & Infrastructure",
+    description:
+      "Mengelola infrastruktur klaster Kubernetes pada Linux VPS untuk menjalankan berbagai layanan secara simultan, dengan konsep orkestrasi aplikasi, pengaturan routing multi-domain, manajemen container, dan otomatisasi layanan.",
+    image: "/images/projects/kubernetes.jpg",
+    technologies: ["Kubernetes", "Docker", "Linux VPS", "Traefik Ingress", "Cloudflare"],
+    screenshotsIncluded: [
+      "Kubernetes Dashboard",
+      "kubectl get pods",
+      "Kubernetes Deployment",
+      "Traefik Ingress Configuration",
+    ],
+  },
+  {
+    id: "proj-06",
+    number: "06",
+    codeName: "REAL-TIME SERVER & CONTAINER MONITORING",
+    title: "Monitoring Server mengunakan Granfana dan Prometheus",
+    category: "DevOps & Infrastructure",
+    description:
+      "Monitoring Server mengunakan prometheus dan granfa untuk mengumpulkan metrix pengunakan cpu memori disk dan jaringan dan granfa berfungsi untuk menampilkan data dalam dashboard  granfana juga mempermudah analisis dan membuat pelaporan.",
+    image: "/images/projects/monitoring.jpg",
+    technologies: ["Docker", "Prometheus", "Grafana", "Node Exporter", "cAdvisor"],
+    screenshotsIncluded: [
+      "Grafana Dashboard",
+      "Prometheus Targets",
+      "CPU Monitoring",
+      "RAM Monitoring",
+      "Container Monitoring",
+    ],
+  },
+];
+
