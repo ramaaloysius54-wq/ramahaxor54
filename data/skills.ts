@@ -97,6 +97,7 @@ export const skillCategories: SkillGroup[] = [
       { name: "Docker", category: "Containers" },
       { name: "Jenkins", category: "Automation Server" },
       { name: "Linux", category: "Operating System" },
+      { name: "Kubertenes", category: "Pods & Containers"},
     ],
   },
   {
