@@ -10,25 +10,24 @@ const jakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://portofoliorama.my.id"),
-  title: "Muhammad Syafiq Ramadani | Junior DevOps Engineer & Web Developer",
+  title: "Syafiq Ramadani — DevOps & Web Engineer",
   description:
-    "Official Portfolio of Muhammad Syafiq Ramadani — Junior DevOps Engineer & Web Developer in Indonesia specializing in Docker, Kubernetes, CI/CD Pipelines, Prometheus, Grafana, and Modern Web Development.",
+    "Portofolio Muhammad Syafiq Ramadani — DevOps & Web Engineer. Fokus pada Linux VPS, Docker, Kubernetes, CI/CD Pipelines, Prometheus, Grafana, dan Web Development.",
   keywords: [
-    "Junior DevOps Engineer Indonesia",
-    "Junior Web Developer Indonesia",
-    "DevOps Portfolio",
-    "Docker Kubernetes Developer",
-    "CI/CD Engineer",
-    "Web Developer Portfolio",
+    "DevOps Engineer Indonesia",
+    "Web Developer Indonesia",
+    "Docker Kubernetes",
+    "CI/CD Pipeline",
     "Muhammad Syafiq Ramadani",
+    "portofoliorama.my.id",
   ],
   authors: [{ name: "Muhammad Syafiq Ramadani" }],
   openGraph: {
-    title: "Muhammad Syafiq Ramadani | Junior DevOps Engineer & Web Developer",
+    title: "Syafiq Ramadani — DevOps & Web Engineer",
     description:
-      "Building Reliable Infrastructure & Modern Web Applications. Explore my Web Development and DevOps Engineering portfolio.",
+      "Linux VPS, Docker & Kubernetes, CI/CD Automation, dan pengembangan aplikasi web modern.",
     url: "https://portofoliorama.my.id",
-    siteName: "SYAFIQ.DEV Portfolio",
+    siteName: "syafiq.ramadani",
     locale: "id_ID",
     type: "website",
   },
@@ -46,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang="id" className="scroll-smooth">
       <body
-        className={`${jakarta.variable} font-sans bg-navy-950 text-slate-100 antialiased selection:bg-sky-500 selection:text-navy-950`}
+        className={`${jakarta.variable} font-sans bg-[#03050a] text-slate-100 antialiased selection:bg-white selection:text-black`}
       >
         {children}
       </body>

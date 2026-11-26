@@ -3,6 +3,8 @@ export interface DevOpsSkill {
   role: string;
   description: string;
   icon: string;
+  image: string;
+  highlights: string[];
 }
 
 export interface SkillGroup {
@@ -19,6 +21,12 @@ export const devopsSkills: DevOpsSkill[] = [
     description:
       "Mengemas aplikasi beserta dependensinya ke dalam kontainer yang ringan, portabel, dan terisolasi. Menjamin konsistensi lingkungan kerja dari pengembangan lokal hingga server produksi.",
     icon: "Box",
+    image: "/images/skills/docker.jpg",
+    highlights: [
+      "Multi-stage Dockerfile Optimization",
+      "Docker Compose & Container Networking",
+      "Image Registry & Production Containerization",
+    ],
   },
   {
     name: "Kubernetes",
@@ -26,6 +34,38 @@ export const devopsSkills: DevOpsSkill[] = [
     description:
       "Mengelola dan mengorkestrasi layanan aplikasi dalam klaster terpadu. Memahami konsep Pod, Deployment, Service, Ingress Controller, Load Balancing, dan Self-Healing.",
     icon: "Network",
+    image: "/images/skills/kubernetes.jpg",
+    highlights: [
+      "K3s Cluster Management on Linux VPS",
+      "Deployment, Service & Traefik Ingress Routing",
+      "Self-Healing & Zero-Downtime Rollout",
+    ],
+  },
+  {
+    name: "Argo CD",
+    role: "Kubernetes GitOps Controller",
+    description:
+      "Mengoperasikan Argo CD secara in-cluster untuk mengotomatisasi continuous delivery multi-aplikasi pada klaster Kubernetes. Mengelola sinkronisasi manifest (k8s/) langsung dari GitHub, memantau status Healthy & Synced secara real-time, serta mengatur isolasi Project dan Namespace.",
+    icon: "Workflow",
+    image: "/images/skills/argocd.jpg",
+    highlights: [
+      "In-Cluster Multi-Application Sync",
+      "Project & Namespace Isolation",
+      "Real-Time Health & Sync Monitoring",
+    ],
+  },
+  {
+    name: "GitOps",
+    role: "Declarative Continuous Delivery",
+    description:
+      "Menerapkan alur kerja GitOps dengan menjadikan repositori Git (branch main) sebagai single source of truth untuk seluruh konfigurasi infrastruktur. Menjamin konsistensi klaster produksi melalui otomatisasi rilis, deteksi configuration drift, dan version-controlled deployment.",
+    icon: "GitBranch",
+    image: "/images/skills/gitops.jpg",
+    highlights: [
+      "Git Repository as Single Source of Truth",
+      "Declarative Kubernetes Manifests (k8s/)",
+      "Drift Detection & Version-Controlled Rollback",
+    ],
   },
   {
     name: "GitHub Actions",
@@ -33,13 +73,12 @@ export const devopsSkills: DevOpsSkill[] = [
     description:
       "Mengotomatisasi alur Continuous Integration dan Continuous Deployment. Mengelola workflow untuk pengujian, build, dan deployment aplikasi ke server produksi.",
     icon: "GitBranch",
-  },
-  {
-    name: "Jenkins",
-    role: "CI/CD Automation",
-    description:
-      "Menggunakan Jenkins untuk mengelola pipeline otomatisasi build, testing, dan deployment aplikasi.",
-    icon: "Workflow",
+    image: "/images/skills/cici.jpg",
+    highlights: [
+      "Automated Build & Test Workflows",
+      "Docker Image Build & Registry Push",
+      "Automated Deployment to Linux VPS & K3s",
+    ],
   },
   {
     name: "Prometheus",
@@ -47,6 +86,12 @@ export const devopsSkills: DevOpsSkill[] = [
     description:
       "Mengumpulkan metrik performa infrastruktur secara real-time, seperti penggunaan CPU, memori, disk, dan jaringan menggunakan Node Exporter dan cAdvisor.",
     icon: "Activity",
+    image: "/images/skills/prometheus.jpg",
+    highlights: [
+      "Real-Time Metrics Scraping & Targets",
+      "Node Exporter Host Telemetry",
+      "cAdvisor Container Resource Metrics",
+    ],
   },
   {
     name: "Grafana",
@@ -54,6 +99,12 @@ export const devopsSkills: DevOpsSkill[] = [
     description:
       "Memvisualisasikan metrik infrastruktur melalui dashboard interaktif untuk memantau kesehatan server, kontainer, dan performa aplikasi.",
     icon: "BarChart3",
+    image: "/images/skills/grafana.jpg",
+    highlights: [
+      "Interactive Server & Container Dashboards",
+      "CPU, RAM, Disk & Network Visualization",
+      "System Health & Anomaly Analysis",
+    ],
   },
 ];
 
@@ -95,9 +146,10 @@ export const skillCategories: SkillGroup[] = [
       { name: "GitHub", category: "Repository Hosting" },
       { name: "Figma", category: "UI/UX Design" },
       { name: "Docker", category: "Containers" },
-      { name: "Jenkins", category: "Automation Server" },
+      { name: "Kubernetes", category: "Pods & Containers" },
+      { name: "Argo CD", category: "GitOps CD" },
+      { name: "GitOps", category: "Declarative CD" },
       { name: "Linux", category: "Operating System" },
-      { name: "Kubertenes", category: "Pods & Containers"},
     ],
   },
   {

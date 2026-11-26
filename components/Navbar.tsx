@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Menu, X, Terminal, ChevronRight } from "lucide-react";
+import { Menu, X, ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { profileData } from "@/data/profile";
 
@@ -22,7 +22,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 24);
 
       const sections = navItems.map((item) => item.href.replace("#", ""));
       let current = "home";
@@ -45,7 +45,10 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
     e.preventDefault();
     setIsOpen(false);
     const targetId = href.replace("#", "");
@@ -68,28 +71,26 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-navy-950/90 backdrop-blur-md border-b border-slate-800/80 shadow-soft py-3.5"
+          ? "bg-[#03050a]/80 backdrop-blur-xl border-b border-white/[0.08] py-3.5"
           : "bg-transparent py-5"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          {/* Brand Logo */}
+        <div className="flex items-center justify-between gap-4">
+          {/* Clean Single-Line Monospace Wordmark */}
           <a
             href="#home"
             onClick={(e) => handleNavClick(e, "#home")}
-            className="flex items-center gap-2.5 group focus:outline-none"
+            className="flex items-center gap-2 whitespace-nowrap group focus:outline-none"
           >
-            <div className="w-9 h-9 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 group-hover:bg-sky-500 group-hover:text-navy-950 transition-all duration-300">
-              <Terminal className="w-5 h-5" />
-            </div>
-            <span className="font-bold text-lg tracking-wider text-white">
-             MUHAMMAD SYAFIQ<span className="text-sky-400">RAMADANI</span>
+            <span className="w-2 h-2 rounded-full bg-white group-hover:bg-sky-400 transition-colors" />
+            <span className="font-mono text-sm sm:text-base font-semibold tracking-tight text-white">
+              syafiq<span className="text-slate-400 font-normal">.ramadani</span>
             </span>
           </a>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+          <nav className="hidden md:flex items-center gap-1">
             {navItems.map((item) => {
               const isActive = activeSection === item.href.replace("#", "");
               return (
@@ -97,18 +98,18 @@ export default function Navbar() {
                   key={item.href}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
-                  className={`relative px-3.5 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                  className={`relative px-3.5 py-2 text-xs font-medium tracking-wide transition-colors duration-200 ${
                     isActive
-                      ? "text-sky-400"
-                      : "text-slate-300 hover:text-white hover:bg-slate-800/40"
+                      ? "text-white"
+                      : "text-slate-400 hover:text-white"
                   }`}
                 >
                   {item.label}
                   {isActive && (
                     <motion.span
                       layoutId="activeNavbarIndicator"
-                      className="absolute bottom-0 left-3 right-3 h-0.5 bg-sky-400 rounded-full"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      className="absolute bottom-0.5 left-3.5 right-3.5 h-[1.5px] bg-white"
+                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
                     />
                   )}
                 </a>
@@ -116,14 +117,15 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Desktop CTA */}
+          {/* Desktop Minimalist Action */}
           <div className="hidden md:block">
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, "#contact")}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-sky-500 hover:bg-sky-400 text-navy-950 transition-all duration-200 shadow-glow"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-white hover:bg-slate-200 text-black transition-colors"
             >
-              Hire Me
+              <span>Kontak</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </div>
 
@@ -132,9 +134,9 @@ export default function Navbar() {
             type="button"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle Menu"
-            className="md:hidden p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 text-slate-200 hover:text-sky-400 hover:border-sky-500/40 transition-colors"
+            className="md:hidden p-2 rounded-lg bg-white/[0.04] border border-white/10 text-slate-200 hover:text-white hover:border-white/25 transition-colors"
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
@@ -146,42 +148,41 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="md:hidden overflow-hidden bg-navy-900/95 backdrop-blur-xl border-b border-slate-800"
+            transition={{ duration: 0.22, ease: "easeInOut" }}
+            className="md:hidden overflow-hidden bg-[#050811]/95 backdrop-blur-2xl border-b border-white/10"
           >
-            <div className="px-4 pt-3 pb-6 space-y-1.5">
-              {navItems.map((item) => {
+            <div className="px-4 pt-3 pb-6 space-y-1">
+              {navItems.map((item, idx) => {
                 const isActive = activeSection === item.href.replace("#", "");
                 return (
                   <a
                     key={item.href}
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
-                    className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                    className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm transition-colors ${
                       isActive
-                        ? "bg-sky-500/15 text-sky-400 border border-sky-500/30"
-                        : "text-slate-300 hover:bg-slate-800/60 hover:text-white"
+                        ? "bg-white/10 text-white font-semibold"
+                        : "text-slate-400 hover:bg-white/[0.04] hover:text-white"
                     }`}
                   >
                     <span>{item.label}</span>
-                    <ChevronRight
-                      className={`w-4 h-4 transition-transform ${
-                        isActive ? "text-sky-400 translate-x-0.5" : "text-slate-500"
-                      }`}
-                    />
+                    <span className="font-mono text-[11px] text-slate-500">
+                      0{idx + 1}
+                    </span>
                   </a>
                 );
               })}
 
-              <div className="pt-3 mt-2 border-t border-slate-800/80">
+              <div className="pt-3 mt-3 border-t border-white/10">
                 <a
                   href={profileData.contact.whatsappUrl}
-                  target="https://wa.me/6288227142563"
+                  target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-center w-full py-3 px-4 rounded-xl text-sm font-semibold bg-sky-500 hover:bg-sky-400 text-navy-950 transition-all"
+                  className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-lg text-sm font-semibold bg-white hover:bg-slate-200 text-black transition-colors"
                 >
-                  Let&apos;s Talk on WhatsApp
+                  <span>Diskusi via WhatsApp</span>
+                  <ArrowUpRight className="w-4 h-4" />
                 </a>
               </div>
             </div>

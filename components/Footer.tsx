@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Mail, MessageSquare, Terminal } from "lucide-react";
+import { Mail, MessageSquare } from "lucide-react";
 import { profileData } from "@/data/profile";
 
 export default function Footer() {
@@ -11,30 +11,25 @@ export default function Footer() {
       : "#contact";
 
   return (
-    <footer className="bg-navy-950 border-t border-slate-800/80 py-10">
+    <footer className="bg-[#03050a]/90 backdrop-blur-md border-t border-white/10 py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Logo & Copyright */}
-          <div className="flex flex-col items-center md:items-start gap-2 text-center md:text-left">
-            <div className="flex items-center gap-2">
-              <Terminal className="w-5 h-5 text-sky-400" />
-              <span className="font-bold text-white tracking-wider">
-                MUHAMMAD<span className="text-sky-400">SYAFIQ RAMADANI</span>
-              </span>
-            </div>
-            <p className="text-xs sm:text-sm text-slate-400">
+          <div className="flex flex-col items-center md:items-start gap-1.5 text-center md:text-left">
+            <span className="font-mono text-sm font-semibold text-white">
+              syafiq<span className="text-slate-400 font-normal">.ramadani</span>
+            </span>
+            <p className="text-xs text-slate-400">
               © 2026 Muhammad Syafiq Ramadani. All Rights Reserved.
             </p>
           </div>
 
-          {/* Social Links */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             <a
               href={profileData.contact.githubUrl}
-              target="https://github.com/ramaaloysius54-wq"
+              target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              className="p-2.5 rounded-xl bg-navy-900 border border-slate-800 text-slate-300 hover:text-sky-400 hover:border-sky-500/40 transition-all"
+              className="p-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-slate-300 hover:text-white hover:border-white/25 transition-colors"
             >
               <svg
                 className="w-4 h-4 fill-current"
@@ -52,7 +47,7 @@ export default function Footer() {
             <a
               href={linkedinHref}
               aria-label="LinkedIn"
-              className="p-2.5 rounded-xl bg-navy-900 border border-slate-800 text-slate-300 hover:text-sky-400 hover:border-sky-500/40 transition-all"
+              className="p-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-slate-300 hover:text-white hover:border-white/25 transition-colors"
             >
               <svg
                 className="w-4 h-4 fill-current"
@@ -65,10 +60,10 @@ export default function Footer() {
 
             <a
               href={profileData.contact.whatsappUrl}
-              target="https://wa.me/6288227142563"
+              target="_blank"
               rel="noopener noreferrer"
               aria-label="WhatsApp"
-              className="p-2.5 rounded-xl bg-navy-900 border border-slate-800 text-slate-300 hover:text-sky-400 hover:border-sky-500/40 transition-all"
+              className="p-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-slate-300 hover:text-white hover:border-white/25 transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
             </a>
@@ -76,16 +71,15 @@ export default function Footer() {
             <a
               href={profileData.contact.mailtoUrl}
               aria-label="Email"
-              className="p-2.5 rounded-xl bg-navy-900 border border-slate-800 text-slate-300 hover:text-sky-400 hover:border-sky-500/40 transition-all"
+              className="p-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-slate-300 hover:text-white hover:border-white/25 transition-colors"
             >
               <Mail className="w-4 h-4" />
             </a>
           </div>
 
-          {/* Credit */}
-          <p className="text-xs sm:text-sm text-slate-400">
-            Designed & Developed by{" "}
-            <span className="text-sky-400 font-semibold">Syafiq</span>
+          <p className="font-mono text-xs text-slate-400">
+            Designed &amp; Developed by{" "}
+            <span className="text-white font-semibold">Syafiq.</span>
           </p>
         </div>
       </div>

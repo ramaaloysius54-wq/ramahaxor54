@@ -7,18 +7,17 @@ html {
 }
 
 body {
-  background-color: #060b19;
+  background-color: #03050a;
   color: #f8fafc;
   overflow-x: hidden;
 }
 
-/* Custom Subtle Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #060b19;
+  background: #03050a;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -27,5 +26,5 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #38bdf8;
+  background: #64748b;
 }

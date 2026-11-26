@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import BlackholeBackground from "@/components/BlackholeBackground";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -15,19 +16,22 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-navy-950 via-navy-900 to-navy-950">
-      <Navbar />
-      <main className="flex-grow">
-        <Hero />
-        <About />
-        <Skills />
-        <Experience />
-        <Education />
-        <Projects />
-        <Certificates />
-        <Contact />
-      </main>
-      <Footer />
+    <div className="relative min-h-screen flex flex-col">
+      <BlackholeBackground />
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-grow">
+          <Hero />
+          <About />
+          <Skills />
+          <Experience />
+          <Education />
+          <Projects />
+          <Certificates />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
       <WhatsAppButton />
     </div>
   );

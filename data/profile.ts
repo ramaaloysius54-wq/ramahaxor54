@@ -1,59 +1,59 @@
 export const profileData = {
   name: "MUHAMMAD SYAFIQ RAMADANI",
   shortName: "Syafiq",
-  logo: "SYAFIQ.DEV",
-  badge: "Junior DevOps Engineer | Web Developer",
-  heroHeading: "Building Reliable Infrastructure & Modern Web Applications.",
+  logo: "syafiq.ramadani",
+  badge: "DevOps & Web Engineer",
+  heroHeading: "Muhammad Syafiq Ramadani.",
   heroDescription:
-    "Saya Muhammad Syafiq Ramadani, seorang DevOps engineering yang memiliki ketertarikan pada pengembangan website, otomatisasi infrastruktur, containerization, dan cloud-native technologies.",
-  location: "Based in Indonesia",
+    "Saya merancang alur deployment otomatis, mengorkestrasi kontainer di server produksi, memantau performa sistem secara real-time, serta membangun aplikasi web yang cepat dan terukur.",
+  location: "Indonesia",
   roles: ["Junior DevOps Engineer", "Web Developer"],
   avatar: "/images/profile.jpg",
   stats: [
     {
       value: "3+",
       label: "Web Projects",
-      subtext: "Deployed Live Websites",
+      subtext: "Website & Web App Live",
     },
     {
       value: "2",
-      label: "Professional Experiences",
-      subtext: "Internship & Operations",
+      label: "Work Experiences",
+      subtext: "Web Dev Intern & Live Ops",
     },
     {
-      value: "Focus",
-      label: "DevOps & Cloud-Native Learning",
-      subtext: "Docker, K8s, CI/CD & Monitoring",
+      value: "Stack",
+      label: "Docker, K3s & Argo CD",
+      subtext: "CI/CD, Prometheus & Grafana",
     },
   ],
   about: {
-    bio: "A Software Engineering vocational high school graduate with experience in web development using HTML, CSS, PHP (Laravel), JavaScript, and WordPress. Possesses strong teamwork and attention to detail, and is proficient in using tools such as Visual Studio Code, GitHub, and Figma. Seeking opportunities to develop practical skills in web development and DevOps engineering.",
-    devopsFocusTitle: "DevOps & Cloud-Native Infrastructure",
+    bio: "Lulusan Rekayasa Perangkat Lunak (RPL) SMK Cendikia dengan pengalaman membangun website menggunakan HTML, CSS, JavaScript, PHP (Laravel), dan WordPress. Terbiasa bekerja menggunakan VS Code, Git, GitHub, dan Figma, serta terus mendalami praktik DevOps dan operasional server.",
+    devopsFocusTitle: "Fokus Infrastruktur & Otomatisasi",
     devopsFocusDescription:
-      "Merancang, mengotomatisasi, dan mengelola infrastruktur server modern yang tangguh, aman, dan berskala tinggi. Berfokus pada efisiensi siklus pengembangan perangkat lunak melalui integrasi CI/CD Pipeline, isolasi aplikasi menggunakan Docker, orkestrasi klaster Kubernetes, serta pemantauan performa sistem secara real-time menggunakan Prometheus dan Grafana untuk meningkatkan ketersediaan layanan.",
+      "Menangani deployment aplikasi di VPS Linux menggunakan Docker, Kubernetes (K3s), GitHub Actions, dan Argo CD (GitOps), lengkap dengan pemantauan metrik server dan kontainer memakai Prometheus serta Grafana.",
     cards: [
       {
         title: "Web Development",
-        subtitle: "Responsive & Modern Web Solutions",
+        subtitle: "Website & Aplikasi Web",
         description:
-          "Membangun website profil institusi dan aplikasi web fungsional menggunakan HTML5, CSS3, JavaScript, PHP (Laravel), dan WordPress dengan fokus pada antarmuka yang bersih, responsif, serta struktur kode yang terorganisir.",
+          "Membangun website profil dan aplikasi web fungsional dengan HTML5, CSS3, JavaScript, PHP (Laravel), dan WordPress yang responsif dan rapi di berbagai ukuran layar.",
         highlights: [
-          "Frontend & UI Implementation",
-          "Backend Web Development (PHP & Laravel)",
-          "CMS Customization (WordPress)",
-          "Responsive Multi-Device Layout",
+          "Frontend & UI Responsif",
+          "PHP & Laravel Web Apps",
+          "Kustomisasi WordPress",
+          "Deployment & Konfigurasi Domain",
         ],
       },
       {
         title: "DevOps & Infrastructure",
-        subtitle: "Automation, Containers & Observability",
+        subtitle: "Containers, GitOps & Monitoring",
         description:
-          "Merancang, mengotomatisasi, dan mengelola infrastruktur server modern melalui integrasi CI/CD Pipeline, isolasi aplikasi menggunakan Docker, orkestrasi klaster Kubernetes, serta pemantauan performa sistem secara real-time menggunakan Prometheus dan Grafana.",
+          "Mengemas aplikasi ke Docker, menjalankan workload di klaster K3s dengan Argo CD dan Traefik Ingress, serta memantau kondisi server lewat Prometheus dan Grafana.",
         highlights: [
-          "Containerization & Orchestration (Docker & K8s)",
-          "Automated CI/CD Pipelines (GitHub Actions & Jenkins)",
-          "Real-Time Monitoring (Prometheus & Grafana)",
-          "Linux VPS Administration & Reverse Proxy",
+          "Docker & Kubernetes (K3s)",
+          "CI/CD & GitOps (GitHub Actions & Argo CD)",
+          "Monitoring (Prometheus & Grafana)",
+          "Linux VPS & Reverse Proxy",
         ],
       },
     ],
@@ -64,9 +64,9 @@ export const profileData = {
     level: "Vocational High School",
   },
   contact: {
-    title: "Let's Work Together",
+    title: "Kontak & Diskusi",
     description:
-      "I'm open to opportunities, collaboration, and professional discussions related to DevOps Engineering and Web Development.",
+      "Terbuka untuk peluang kerja Junior DevOps Engineer, Web Developer, maupun diskusi teknis seputar infrastruktur dan pengembangan web.",
     whatsappNumber: "088227142563",
     whatsappUrl: "https://wa.me/6288227142563",
     displayEmail: "ramaaloysius@gmail.com",

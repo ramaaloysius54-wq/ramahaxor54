@@ -1,3 +1,5 @@
+import { CodeSnippet, GalleryImage } from "@/components/ImageModal";
+
 export interface ProjectItem {
   id: string;
   number: string;
@@ -6,6 +8,9 @@ export interface ProjectItem {
   category: "Web Development" | "DevOps & Infrastructure";
   description: string;
   image: string;
+  architectureImage?: string;
+  gallery?: GalleryImage[];
+  codeSnippets?: CodeSnippet[];
   liveUrl?: string;
   technologies: string[];
   screenshotsIncluded: string[];
@@ -15,14 +20,14 @@ export const projectsData: ProjectItem[] = [
   {
     id: "proj-01",
     number: "01",
-    codeName: "SMK BHAKTI KENCANA TASIKMALAYA",
-    title: "SMK BHAKTI KENCANA TASIKMALAYA",
+    codeName: "SMK BINA KARYA TASIKMALAYA",
+    title: "School Website Development",
     category: "Web Development",
     description:
-      "Pengembangan website sekolah untuk menyediakan informasi dan konten digital yang dapat diakses oleh pengunjung.",
-    image: "/images/projects/smkbktasik.jpg",
+      "Pengembangan website sekolah untuk menyediakan informasi akademik dan konten digital yang mudah diakses pengunjung.",
+    image: "/images/projects/smkbk.jpg",
     liveUrl: "https://smkbktasik.sch.id",
-    technologies: [ "wordpress", "elementor", "photo slider" ],
+    technologies: ["Web Development", "HTML5", "CSS3", "JavaScript", "Responsive UI"],
     screenshotsIncluded: [
       "Halaman Utama Website Sekolah",
       "Navigasi & Struktur Informasi Akademik",
@@ -36,7 +41,7 @@ export const projectsData: ProjectItem[] = [
     title: "Tabungan Rama – Web Application",
     category: "Web Development",
     description:
-      "Proyek pengembangan aplikasi berbasis web yang menjadi bagian dari pengalaman saya dalam membangun dan mengelola aplikasi web.",
+      "Aplikasi berbasis web dengan antarmuka manajemen data responsif yang dideploy melalui alur containerisasi dan reverse proxy.",
     image: "/images/projects/tabunganrama.jpg",
     liveUrl: "https://tabunganrama.my.id",
     technologies: ["Web Application", "Frontend UI", "Web Deployment"],
@@ -53,7 +58,7 @@ export const projectsData: ProjectItem[] = [
     title: "Rama Haxor – Web Development Project",
     category: "Web Development",
     description:
-      "Proyek website yang menunjukkan eksplorasi dan pengembangan kemampuan dalam bidang web development dan teknologi.",
+      "Proyek website yang menampilkan eksplorasi pengembangan antarmuka web modern dan manajemen infrastruktur hosting mandiri.",
     image: "/images/projects/ramahaxor.jpg",
     liveUrl: "https://ramahaxor.my.id",
     technologies: ["Web Development", "Modern UI", "Custom Hosting & DNS"],
@@ -66,251 +71,287 @@ export const projectsData: ProjectItem[] = [
   {
     id: "proj-04",
     number: "04",
-    codeName: "END-TO-END AUTOMATED CI/CD PIPELINE",
-    title: "End-to-End Automated CI/CD Pipeline",
+    codeName: "END-TO-END GITOPS & CI/CD PIPELINE",
+    title: "GitHub Actions, Docker Hub & Argo CD Pipeline",
     category: "DevOps & Infrastructure",
-    description: `Mengimplementasikan pipeline CI/CD menggunakan GitHub Actions untuk mengotomatisasi proses pengujian dan deployment aplikasi ke VPS secara berkelanjutan pada setiap push ke branch main.
+    description:
+      "Membangun pipeline CI/CD berbasis GitOps untuk aplikasi produksi (Next.js & Socket.IO). Setiap push ke branch main memicu Docker Buildx multi-stage (~66.9 MB), push image bertag commit SHA ke Docker Hub, serta sinkronisasi manifest deklaratif oleh Argo CD ke klaster K3s dengan zero-downtime rollout.",
+    image: "/images/projects/cicd-pipeline.jpg",
+    architectureImage: "/images/projects/architecture-gitops.png",
+    liveUrl: "https://meet.portofoliorama.my.id",
+    technologies: [
+      "GitHub Actions",
+      "Docker Buildx",
+      "Docker Hub",
+      "Argo CD",
+      "GitOps",
+      "K3s",
+    ],
+    screenshotsIncluded: [
+      "GitHub Actions Rollout & Sync Log",
+      "Docker Hub Multi-Stage Image Tags",
+      "Argo CD Healthy & Synced Dashboard",
+      "End-to-End GitOps Architecture Flow",
+    ],
+    gallery: [
+      { label: "GitHub Actions Log", src: "/images/projects/cicd-pipeline.jpg" },
+      { label: "Docker Hub Tags", src: "/images/projects/docker-hub.jpg" },
+      { label: "Argo CD Dashboard", src: "/images/projects/argocd-dashboard.jpg" },
+    ],
+    codeSnippets: [
+      {
+        filename: "Dockerfile",
+        language: "dockerfile",
+        code: `# Multi-stage build untuk ukuran image minimal (~66.9 MB)
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
 
-Berikut ini adalah konfigurasi workflows nya (name: CI/CD Pipeline Rama DevOps):
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+RUN addgroup -S nodejs && adduser -S nextjs -G nodejs
+
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+
+USER nextjs
+EXPOSE 3000
+CMD ["node", "server.js"]`,
+      },
+      {
+        filename: "deploy.yml",
+        language: "yaml",
+        code: `name: Build Docker Hub & Sync ArgoCD (K3s)
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  build-and-deploy:
-    name: rama DevOps
+  build-and-sync:
     runs-on: ubuntu-latest
-
     steps:
-      - name: 📥 Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: ⚙️ Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
         with:
-          node-version: '20'
+          username: \${{ secrets.DOCKERHUB_USERNAME }}
+          password: \${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: 🧪 Clean Install & Build (Di GitHub)
-        run: |
-          npm ci
-          npx prisma generate
-          npm run build --if-present
-          npm run bot:build --if-present
-
-      - name: 🚀 Sync & Restart di VPS (/var/www/rama_bot)
-        env:
-          VPS_HOST: \${{ secrets.VPS_HOST }}
-          VPS_USER: \${{ secrets.VPS_USER }}
-          SSHPASS: \${{ secrets.VPS_PASSWORD }}
-        run: |
-          sudo apt-get update && sudo apt-get install -y sshpass rsync
-          
-          echo "1. Mengirim file terbaru ke VPS..."
-          sshpass -e rsync -avz \\
-            --exclude='.git' \\
-            --exclude='node_modules' \\
-            --exclude='.env' \\
-            --exclude='baileys_auth_info' \\
-            -e "ssh -o StrictHostKeyChecking=no -o PubkeyAuthentication=no -p 22" \\
-            ./ "$VPS_USER@$VPS_HOST:/var/www/rama_bot/"
-          
-          echo "2. Install module & Restart PM2 di VPS..."
-          sshpass -e ssh -o StrictHostKeyChecking=no -o PubkeyAuthentication=no -p 22 "$VPS_USER@$VPS_HOST" << 'ENDSSH'
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-            export PATH=$PATH:/usr/local/bin:/usr/bin:~/.npm-global/bin
-            cd /var/www/rama_bot
-            
-            npm ci
-            npx prisma generate
-            npm run bot:build --if-present
-            
-            pm2 stop all || true
-            pm2 save || true
-          ENDSSH
-
-      - name: ☸️ Deploy & Rollout Kubernetes (K3s) di VPS
-        env:
-          VPS_HOST: \${{ secrets.VPS_HOST }}
-          VPS_USER: \${{ secrets.VPS_USER }}
-          SSHPASS: \${{ secrets.VPS_PASSWORD }}
-        run: |
-          echo "3. Menjalankan Orkestrasi Pods Kubernetes (K3s)..."
-          sshpass -e ssh -o StrictHostKeyChecking=no -o PubkeyAuthentication=no -p 22 "$VPS_USER@$VPS_HOST" << 'ENDK8S'
-            export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-            mkdir -p /var/www/k8s-rama
-            cd /var/www/k8s-rama
-
-            # Hapus deployment bot-engine lama yang terpisah agar tidak bentrok sesi WA
-            kubectl delete deployment bot-engine --ignore-not-found=true
-
-            cat << 'EOF2' > deployment.yaml
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: web-dashboard
-          spec:
-            replicas: 1
-            selector:
-              matchLabels:
-                app: web-dashboard
-            template:
-              metadata:
-                labels:
-                  app: web-dashboard
-              spec:
-                enableServiceLinks: false
-                containers:
-                - name: web
-                  image: node:20
-                  workingDir: /app
-                  command: ["sh", "-c", "npm run start"]
-                  ports:
-                  - containerPort: 3000
-                  env:
-                  - name: HOSTNAME
-                    value: "0.0.0.0"
-                  - name: HOST
-                    value: "0.0.0.0"
-                  - name: PORT
-                    value: "3000"
-                  - name: BOT_SERVICE_PORT
-                    value: "4000"
-                  - name: BOT_PORT
-                    value: "4000"
-                  volumeMounts:
-                  - name: app-volume
-                    mountPath: /app
-                - name: engine
-                  image: node:20
-                  workingDir: /app
-                  command: ["sh", "-c", "npm run bot:build && (node dist-bot/server.js || node dist-bot/bot-service/server.js)"]
-                  ports:
-                  - containerPort: 4000
-                  env:
-                  - name: PORT
-                    value: "4000"
-                  - name: BOT_SERVICE_PORT
-                    value: "4000"
-                  volumeMounts:
-                  - name: app-volume
-                    mountPath: /app
-                volumes:
-                - name: app-volume
-                  hostPath:
-                    path: /var/www/rama_bot
-          EOF2
-
-            cat << 'EOF2' > service.yaml
-          apiVersion: v1
-          kind: Service
-          metadata:
-            name: web-service
-          spec:
-            type: NodePort
-            selector:
-              app: web-dashboard
-            ports:
-              - protocol: TCP
-                port: 80
-                targetPort: 3000
-                nodePort: 30080
-          ---
-          apiVersion: v1
-          kind: Service
-          metadata:
-            name: bot-service
-          spec:
-            selector:
-              app: web-dashboard
-            ports:
-              - protocol: TCP
-                port: 4000
-                targetPort: 4000
-          EOF2
-
-            cat << 'EOF2' > ingress.yaml
-          apiVersion: networking.k8s.io/v1
-          kind: Ingress
-          metadata:
-            name: rama-ingress
-            annotations:
-              ingress.kubernetes.io/ssl-redirect: "false"
-          spec:
-            rules:
-            - host: tabunganrama.my.id
-              http:
-                paths:
-                - path: /api/bot
-                  pathType: Prefix
-                  backend:
-                    service:
-                      name: bot-service
-                      port:
-                        number: 4000
-                - path: /
-                  pathType: Prefix
-                  backend:
-                    service:
-                      name: web-service
-                      port:
-                        number: 80
-          EOF2
-
-            kubectl apply -f deployment.yaml || (kubectl delete -f deployment.yaml && kubectl apply -f deployment.yaml)
-            kubectl apply -f service.yaml
-            kubectl apply -f ingress.yaml
-            kubectl rollout restart deployment/web-dashboard
-            sleep 8
-            kubectl get pods -l app=web-dashboard -o wide
-            kubectl get svc web-service bot-service
-            kubectl get ingress rama-ingress
-          ENDK8S`,
-    image: "/images/projects/cicd-pipeline.jpg",
-    technologies: ["GitHub Actions", "Jenkins", "Linux VPS", "SSH", "Docker"],
-    screenshotsIncluded: [
-      "GitHub Actions Workflow",
-      "Pipeline Execution",
-      "Terminal Deployment",
-      "Server Production",
+      - name: Build & Push Image (latest + Commit SHA)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ramaaloysius54/ramameet:latest
+            ramaaloysius54/ramameet:\${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max`,
+      },
+      {
+        filename: "argocd-app.yaml",
+        language: "yaml",
+        code: `apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ramameet-prod
+  namespace: argocd
+spec:
+  project: ramameet
+  source:
+    repoURL: https://github.com/ramaaloysius54-wq/meet.git
+    targetRevision: main
+    path: k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true`,
+      },
     ],
   },
   {
     id: "proj-05",
     number: "05",
     codeName: "KUBERNETES MULTI-SERVICE ORCHESTRATION",
-    title: "Kubernetes Multi-Service Orchestration",
+    title: "K3s Multi-Service Cluster & Traefik Ingress",
     category: "DevOps & Infrastructure",
     description:
-      "Mengelola infrastruktur klaster Kubernetes pada Linux VPS untuk menjalankan berbagai layanan secara simultan, dengan konsep orkestrasi aplikasi, pengaturan routing multi-domain, manajemen container, dan otomatisasi layanan.",
+      "Mengelola klaster Kubernetes (K3s) pada Linux VPS Ubuntu yang menjalankan 12+ pod produksi secara simultan (Web, Signaling WebSocket, Redis, HRIS, dan Bot Dashboard) dengan replika multi-pod, Readiness/Liveness probe, serta routing TLS otomatis melalui Traefik Ingress dan cert-manager.",
     image: "/images/projects/kubernetes.jpg",
-    technologies: ["Kubernetes", "Docker", "Linux VPS", "Traefik Ingress", "Cloudflare"],
+    technologies: [
+      "Kubernetes (K3s)",
+      "Argo CD",
+      "Traefik Ingress",
+      "cert-manager",
+      "Linux VPS",
+    ],
     screenshotsIncluded: [
-      "Kubernetes Dashboard",
-      "kubectl get pods",
-      "Kubernetes Deployment",
-      "Traefik Ingress Configuration",
+      "12+ Production Pods Running (kubectl get pods)",
+      "Argo CD In-Cluster Multi-App Sync",
+      "Multi-Replica Deployment & Health Probes",
+      "Traefik Ingress HTTPS & WebSocket Routing",
+    ],
+    gallery: [
+      { label: "K3s Running Pods", src: "/images/projects/kubernetes.jpg" },
+      { label: "Argo CD Apps", src: "/images/projects/argocd-dashboard.jpg" },
+    ],
+    codeSnippets: [
+      {
+        filename: "deployment.yaml",
+        language: "yaml",
+        code: `apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ramameet-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ramameet-web
+  template:
+    metadata:
+      labels:
+        app: ramameet-web
+    spec:
+      containers:
+        - name: web
+          image: ramaaloysius54/ramameet:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 15`,
+      },
+      {
+        filename: "ingress.yaml",
+        language: "yaml",
+        code: `apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ramameet-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - meet.portofoliorama.my.id
+      secretName: ramameet-tls
+  rules:
+    - host: meet.portofoliorama.my.id
+      http:
+        paths:
+          - path: /socket.io
+            pathType: Prefix
+            backend:
+              service:
+                name: ramameet-signaling
+                port:
+                  number: 4000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ramameet-web
+                port:
+                  number: 3000`,
+      },
     ],
   },
   {
     id: "proj-06",
     number: "06",
     codeName: "REAL-TIME SERVER & CONTAINER MONITORING",
-    title: "Monitoring Server mengunakan Granfana dan Prometheus",
+    title: "Prometheus & Grafana Infrastructure Observability",
     category: "DevOps & Infrastructure",
     description:
-      "Monitoring Server mengunakan prometheus dan granfa untuk mengumpulkan metrix pengunakan cpu memori disk dan jaringan dan granfa berfungsi untuk menampilkan data dalam dashboard  granfana juga mempermudah analisis dan membuat pelaporan.",
+      "Merancang sistem pemantauan infrastruktur real-time menggunakan Prometheus, Node Exporter, dan Grafana untuk mengumpulkan serta memvisualisasikan metrik CPU, system load, memori, ruang disk, dan trafik jaringan node VPS guna mendeteksi bottleneck secara cepat.",
     image: "/images/projects/monitoring.jpg",
-    technologies: ["Docker", "Prometheus", "Grafana", "Node Exporter", "cAdvisor"],
+    technologies: [
+      "Prometheus",
+      "Grafana",
+      "Node Exporter",
+      "Docker",
+      "Linux VPS",
+    ],
     screenshotsIncluded: [
-      "Grafana Dashboard",
-      "Prometheus Targets",
-      "CPU Monitoring",
-      "RAM Monitoring",
-      "Container Monitoring",
+      "Grafana Node Exporter Dashboard (CPU, RAM, Disk, Net)",
+      "Prometheus Scrape Targets Status (UP)",
+      "Real-Time Host & Container Telemetry",
+    ],
+    gallery: [
+      { label: "Grafana Dashboard", src: "/images/projects/monitoring.jpg" },
+      { label: "Prometheus Targets", src: "/images/projects/prometheus-targets.jpg" },
+    ],
+    codeSnippets: [
+      {
+        filename: "prometheus.yml",
+        language: "yaml",
+        code: `global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "vps-node-exporter"
+    static_configs:
+      - targets: ["node-exporter:9100"]`,
+      },
+      {
+        filename: "docker-compose.yml",
+        language: "yaml",
+        code: `services:
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "127.0.0.1:9090:9090"
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    restart: unless-stopped
+    pid: host
+    volumes:
+      - /:/host:ro,rslave
+    command:
+      - "--path.rootfs=/host"
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3030:3000"`,
+      },
     ],
   },
 ];
-
